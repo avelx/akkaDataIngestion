@@ -3,7 +3,7 @@ import models._
 
 object Runner {
 
-  import models.TradeProtocol.tradeFormat
+  import models.TradeProtocol.TradeJsonFormat
 
   def main(args: Array[String]) : Unit = {
 
@@ -30,7 +30,8 @@ object Runner {
         |   "t" : "Tactic",
         |   "v" : "Vello",
         |   "x" : "Xerox",
-        |   "y" : "Yellow"
+        |   "y" : "Yellow",
+        |   "z" : "Zeta"
         |}""".stripMargin
 
     val jsonAst = source.parseJson
