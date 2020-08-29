@@ -31,7 +31,12 @@ object Runner {
         |   "v" : "Vello",
         |   "x" : "Xerox",
         |   "y" : "Yellow",
-        |   "z" : "Zeta"
+        |   "z" : "Zeta",
+        |   "aa" : "Alpha2",
+        |   "bb" : "Beta2",
+        |   "cc" : "Centurion",
+        |   "dd" : "Damask",
+        |   "ee" : "Estela"
         |}""".stripMargin
 
     val jsonAst = source.parseJson

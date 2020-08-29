@@ -34,7 +34,12 @@ package object models {
     v : String,
     x : String,
     y : String,
-    z : String   // 23
+    z : String,   // 23
+    aa: String,
+    bb: String,
+    cc: String,
+    dd: String,
+    ee: String
   )
 
   object TradeProtocol extends DefaultJsonProtocol {
@@ -64,16 +69,19 @@ package object models {
           JsString(t.v),
           JsString(t.x),
           JsString(t.y),
-          JsString(t.z)
+          JsString(t.z),
+          JsString(t.aa),
+          JsString(t.bb)
         )
 
       def read(value: JsValue) = value match {
         case JsObject( t ) =>
           import JsonHelper.JsValueToString
           Trade(
-            t("a").as, t("b").as, t("c").as, t("d").as, t("e").as,  t("f").as,   t("g").as,
-            t("h").as,  t("i").as,  t("k").as, t("l").as, t("m").as, t("n").as, t("o").as, t("p").as, t("q").as, t("r").as, t("s").as, t("t").as, t("v").as,
-              t("x").as, t("y").as, t("z").as
+              t("a").as, t("b").as, t("c").as, t("d").as, t("e").as,  t("f").as,   t("g").as, t("h").as,  t("i").as,
+              t("k").as, t("l").as, t("m").as, t("n").as, t("o").as, t("p").as, t("q").as, t("r").as, t("s").as,
+              t("t").as, t("v").as, t("x").as, t("y").as, t("z").as,
+              t("aa").as, t("bb").as, t("cc").as, t("dd").as, t("ee").as
           )
         case _ =>
           deserializationError("Trade object expected")

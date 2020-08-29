@@ -12,3 +12,5 @@ libraryDependencies += "com.typesafe.akka" %% "akka-actor-testkit-typed" % AkkaV
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.1.1" % Test
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3"
 libraryDependencies += "com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion
+
+libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.14.1"
