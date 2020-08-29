@@ -7,7 +7,31 @@ object Runner {
 
   def main(args: Array[String]) : Unit = {
 
-    val source = """{ "a": "JSON source" }"""
+    val source =
+      """{
+        |   "a" : "Alpha",
+        |   "b" : "Betta",
+        |   "c" : "CCCC",
+        |   "d" : "Delta",
+        |   "e" : "Elephan",
+        |   "f" : "Finite",
+        |   "g" : "Ge",
+        |   "h" : "Hero",
+        |   "i" : "Internet",
+        |   "k" : "Kilo",
+        |   "l" : "Limo",
+        |   "m" : "Milk",
+        |   "n" : "Nero",
+        |   "o" : "Opera",
+        |   "p" : "Petra",
+        |   "q" : "Quatra",
+        |   "r" : "Roller",
+        |   "s" : "Seven",
+        |   "t" : "Tactic",
+        |   "v" : "Vello",
+        |   "x" : "Xerox",
+        |   "y" : "Yellow"
+        |}""".stripMargin
 
     val jsonAst = source.parseJson
 
