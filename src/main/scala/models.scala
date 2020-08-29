@@ -1,8 +1,15 @@
 import spray.json.{DefaultJsonProtocol, JsArray, JsObject, JsString, JsValue, RootJsonFormat, deserializationError}
 
-import scala.util.Try
-
 package object models {
+
+  object JsonHelper {
+    implicit class JsValueToString(t: JsValue) {
+      def as : String = t match {
+        case JsString(v) => v
+        case _ => ""
+      }
+    }
+  }
 
   final case class Trade (
     a : String,
@@ -60,21 +67,13 @@ package object models {
           JsString(t.z)
         )
 
-      private def toString(v: JsValue ) : String = {
-        Try {
-          v.asInstanceOf[JsString].value
-        }.getOrElse("")
-      }
-
       def read(value: JsValue) = value match {
         case JsObject( t ) =>
-
+          import JsonHelper.JsValueToString
           Trade(
-            toString( t("a") ), toString( t("b") ), toString( t("c") ), toString( t("d") ), toString( t("e") ),
-            toString( t("f") ), toString( t("g") ), toString( t("h") ), toString( t("i") ), toString( t("k") ),
-            toString( t("l") ), toString( t("m") ), toString( t("n") ), toString( t("o") ), toString( t("p") ),
-            toString( t("q") ), toString( t("r") ), toString( t("s") ), toString( t("t") ), toString( t("v") ),
-            toString( t("x") ), toString( t("y") ), toString( t("z") )
+            t("a").as, t("b").as, t("c").as, t("d").as, t("e").as,  t("f").as,   t("g").as,
+            t("h").as,  t("i").as,  t("k").as, t("l").as, t("m").as, t("n").as, t("o").as, t("p").as, t("q").as, t("r").as, t("s").as, t("t").as, t("v").as,
+              t("x").as, t("y").as, t("z").as
           )
         case _ =>
           deserializationError("Trade object expected")
