@@ -8,9 +8,9 @@ trait ApiExtractor {
   def sinkA: Sink[String, Future[_]]
   def sinkB: Sink[String, Future[_]]
 
-  def processing : Flow[String, String, NotUsed] = Flow[String]
+  def processing : Flow[String, String, NotUsed] = Flow[String].map(_ + "")
 
-  def graph(source: Source[String, NotUsed]) =
+  def createGraph(source: Source[String, NotUsed]) =
     RunnableGraph
       .fromGraph(GraphDSL.create(sinkA, sinkB)(Tuple2.apply) {
         implicit builder => (a, b) =>
@@ -18,7 +18,7 @@ trait ApiExtractor {
           val broadcast = builder.add(Broadcast[String](2))
           source ~> broadcast
           broadcast.out(0) ~> processing ~> a
-          broadcast.out(1) ~> b
+          broadcast.out(1) ~> processing ~> b
           ClosedShape
       })
 }

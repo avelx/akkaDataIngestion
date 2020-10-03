@@ -10,7 +10,7 @@ import scala.concurrent.Future
 
 class ApiServiceSpec extends FreeSpec with AkkaSpec {
 
-  val serviceUnderTest = new ApiExtractor {
+  val streamUnderTest = new ApiExtractor {
     override def sinkA: Sink[String, Future[Seq[String]]] = Sink.seq[String]
 
     override def sinkB: Sink[String, Future[Seq[String]]] = Sink.seq[String]
@@ -20,16 +20,11 @@ class ApiServiceSpec extends FreeSpec with AkkaSpec {
     "should return expected number of elements" in {
       val elements = Seq("Data", "Test", "GetGet", "ThisATest")
       val source = Source( elements )
-      val g = serviceUnderTest.graph(source)
-      val (resA, resB) = g
-        .run()
-
-      whenReady(resA){ futureA =>
-        assert(futureA == elements)
-      }
-
-      whenReady(resB){ futureB =>
-        assert(futureB == elements)
+      val closeShapeGraph = streamUnderTest.createGraph(source)
+      val (matLeft, matRight) = closeShapeGraph.run()
+      val result = Future.sequence( Seq(matLeft, matRight) )
+      whenReady(result){ future =>
+        assert(future == List(elements, elements))
       }
 
     }
