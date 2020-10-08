@@ -15,3 +15,10 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "3.1.1" % Test
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3"
 libraryDependencies += "com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion
 libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.14.1"
+libraryDependencies ++= Seq(
+  "com.lightbend.akka" %% "akka-stream-alpakka-hdfs" % "2.0.2",
+  "com.typesafe.akka" %% "akka-stream" % AkkaVersion
+)
+libraryDependencies ++= Seq(
+  "com.lightbend.akka" %% "akka-stream-alpakka-file" % "2.0.2"
+)
