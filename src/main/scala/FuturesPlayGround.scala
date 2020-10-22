@@ -8,9 +8,12 @@ object FuturesPlayGround {
 
   def extraction(params: String): Future[Done] = {
    Future {
-     Thread.sleep( Random.nextInt(200))
+     Thread.sleep(5000)
+     println(s"Run: $params")
+
+     //     Thread.sleep( Random.nextInt(200))
      val seed = Random.nextInt(100)
-     if (seed > 80)
+     if  (seed > 80)
        throw new RuntimeException(s"Some error: $seed")
      else
       Done
@@ -19,13 +22,15 @@ object FuturesPlayGround {
 
   def main(args: Array[String]) : Unit = {
     val sq = List("5", "6", "7", "8", "45", "45", "45", "32453")
-    val res = Future.sequence( sq.map(extraction ) )
-    val d = res.map(result => if (result.forall(_ == Done))  Done
-      else throw new RuntimeException("Error occurred"))
-    d onComplete{
-      case Success(value) => println(value)
-      case Failure(exception) => println(exception)
+    val res = sq
+      .foldLeft( Future[Done](Done) ){ (op, elem) =>
+        op.flatMap{ _ => extraction(elem) }
+      }
+    res onComplete {
+      case Success(v) => println(v)
+      case Failure(ex) => println(ex)
     }
-    Thread.sleep(500)
+
+    Thread.sleep(50000)
   }
 }
