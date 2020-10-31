@@ -23,3 +23,11 @@ libraryDependencies += "com.lightbend.akka" %% "akka-stream-alpakka-cassandra" %
 libraryDependencies += "software.aws.mcs" % "aws-sigv4-auth-cassandra-java-driver-plugin" % "4.0.3"
 libraryDependencies += "org.apache.hadoop" % "hadoop-common" % hadoopVersion % Test classifier "tests"
 libraryDependencies += "org.apache.hadoop" % "hadoop-client" % "3.2.1"
+
+val circeVersion = "0.12.3"
+
+libraryDependencies ++= Seq(
+  "io.circe" %% "circe-core",
+  "io.circe" %% "circe-generic",
+  "io.circe" %% "circe-parser"
+).map(_ % circeVersion)
