@@ -14,6 +14,7 @@ import io.circe.generic.auto._
 import io.circe.parser._
 import io.circe.syntax._
 import org.apache.hadoop.fs.Path
+import org.apache.hadoop.util.NativeCodeLoader
 
 import scala.util.Random
 
@@ -26,10 +27,13 @@ object HdfsPersistance {
     implicit val system = ActorSystem("QuickStart")
 
     val conf = new Configuration()
-    conf.addResource(new Path("/Users/pavel/hadoop/hadoop-3.3.0/etc/hadoop/core-site.xml") )
+    //conf.addResource(new Path("/Users/pavel/hadoop/hadoop-3.3.0/etc/hadoop/core-site.xml") )
     conf.set("fs.defaultFS", "hdfs://192.168.0.8:9000/")
+    conf.set("io.compression.codecs",
+      "org.apache.hadoop.io.compress.GzipCodec,org.apache.hadoop.io.compress.DefaultCodec,org.apache.hadoop.io.compress.BZip2Codec")
+    conf.set("spark.io.compression.codec", "org.apache.hadoop.io.compress.GzipCodec")
 
-    val pathGenerator = FilePathGenerator((rotationCount: Long, timestamp: Long) => s"/data/compressed/$rotationCount-$timestamp")
+    val pathGenerator = FilePathGenerator((rotationCount: Long, timestamp: Long) => s"/data/compressed/b/$rotationCount-$timestamp")
     val settings =
       HdfsWritingSettings()
         .withOverwrite(true)
@@ -47,7 +51,7 @@ object HdfsPersistance {
     val source = Source
       .fromIterator( () => (0 to counter).iterator)
 
-    val codec = new DefaultCodec()
+    val codec = new GzipCodec()
     val fsConf = fs.getConf
     codec.setConf(fsConf)
 
@@ -57,19 +61,27 @@ object HdfsPersistance {
         Row (id.toString, trade.asJson.noSpaces)
       })
       .map { row =>
-        HdfsWriteMessage((new Text(row.id), new Text(row.json)))
+        HdfsWriteMessage( ByteString(row.json) )
+        //HdfsWriteMessage((new Text(row.id), new Text(row.json)))
       }
       .via(
-        HdfsFlow.sequence(
-          fs,
-          SyncStrategy.none,
-          RotationStrategy.size(100, FileUnit.MB),
-          CompressionType.BLOCK,
-          codec,
-          settings,
-          classOf[Text],
-          classOf[Text]
-        )
+        HdfsFlow.compressed(
+                    fs,
+                    SyncStrategy.none,
+                    RotationStrategy.size(100, FileUnit.MB),
+                    codec,
+                    settings
+                  )
+//        HdfsFlow.sequence(
+//          fs,
+//          SyncStrategy.none,
+//          RotationStrategy.size(100, FileUnit.MB),
+//          CompressionType.BLOCK,
+//          codec,
+//          settings,
+//          classOf[Text],
+//          classOf[Text]
+//        )
       )
       .runWith(Sink.ignore)
 
