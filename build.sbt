@@ -1,3 +1,4 @@
+
 name := "akkaDataIngestor"
 
 version := "0.1"
@@ -24,6 +25,7 @@ libraryDependencies += "software.aws.mcs" % "aws-sigv4-auth-cassandra-java-drive
 libraryDependencies += "org.apache.hadoop" % "hadoop-common" % hadoopVersion % Test classifier "tests"
 libraryDependencies += "org.apache.hadoop" % "hadoop-client" % "3.2.1"
 
+
 val circeVersion = "0.12.3"
 
 libraryDependencies ++= Seq(
@@ -31,3 +33,22 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-generic",
   "io.circe" %% "circe-parser"
 ).map(_ % circeVersion)
+
+mainClass in assembly := Some("HdfsPersistance")
+
+assemblyJarName in assembly := "data-ingestor.jar"
+
+assemblyOption in assembly :=
+  (assemblyOption in assembly).value.copy(includeScala = true, includeDependency = true)
+
+test in assembly := {}
+
+assemblyMergeStrategy in assembly := {
+  case PathList("META-INF", xs@_*) => MergeStrategy.discard
+  case x => MergeStrategy.first
+}
+
+libraryDependencies += "io.kamon" %% "kamon-core" % "2.1.8"
+libraryDependencies += "io.kamon" %% "kamon-akka" % "2.1.8"
+libraryDependencies += "io.kamon" %% "kamon-prometheus" % "2.1.8"
+libraryDependencies += "io.kamon" %% "kamon-logback" % "2.1.8"
